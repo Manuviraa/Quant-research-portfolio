@@ -64,21 +64,11 @@ $$
 
 Global Minimum Variance portfolio:
 
-$$
-w_{GMV}
-=
-\frac{\Sigma^{-1}\mathbf{1}}
-{\mathbf{1}^\top\Sigma^{-1}\mathbf{1}}
-$$
+$$ w_{GMV} = \frac{\Sigma^{-1}\mathbf{1}} {\mathbf{1}^\top\Sigma^{-1}\mathbf{1}}$$
 
-For a target return \(r^*\), the minimum-variance portfolio satisfies:
+For a target return $(r^*)$ , the minimum-variance portfolio satisfies:
 
-$$
-w
-=
-\Sigma^{-1}A
-(A^\top\Sigma^{-1}A)^{-1}b
-$$
+$$ w = \Sigma^{-1}A (A^\top\Sigma^{-1}A)^{-1}b $$
 
 where
 
