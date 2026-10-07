@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-def portfolio_returns(weights, mu):
+def portfolio_return(weights, mu):
     return weights @ mu
 
 def portfolio_variance(weights, cov):
