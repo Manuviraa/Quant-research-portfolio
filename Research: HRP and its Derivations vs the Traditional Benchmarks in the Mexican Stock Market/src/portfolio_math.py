@@ -15,8 +15,8 @@ def portfolio_volatility(weights, cov):
 
 def global_minimum_variance(cov):
     J = np.ones(cov.shape[0])
-    inv_cov = np.linalg.inv(cov)
-    return (inv_cov @ J) / (J.T @ inv_cov @ J)
+    inv_cov = np.linalg.solve(cov, J)
+    return inv_cov / (J.T @ inv_cov)
 
 def efficient_portfolio(mu, cov, target_return):
     #1. Create the vectors
