@@ -1,6 +1,10 @@
 import numpy as np
+import pytest
 
-from src.covariance import sample_covariance
+from src.covariance import (sample_covariance,  
+                            gmv_setup)
+
+from src.portfolio_math import portfolio_variance
 
 # The sample covariance function matches the output of np.cov()
 def test_sample_cov_matches_numpy_cov():
@@ -30,3 +34,21 @@ def test_sample_cov_rank_leq_t_minus_1():
     S = sample_covariance(R)
     rank_S = np.linalg.matrix_rank(S)
     assert rank_S <= (T - 1)
+
+# Reported GMV <= w* under S
+@pytest.mark.parametrize("seed", range(20))
+@pytest.mark.parametrize("T", [40, 100, 1000])
+def test_reported_gmv_variance_leq_w_star_under_S(seed, T):
+    Sigma, S, w_star, w_hat = gmv_setup(seed, T)
+    left = portfolio_variance(w_hat, S)
+    right = portfolio_variance(w_star, S)
+    assert left <= right * (1 + 1e-10)
+
+# True GMV <= ŵ under Σ)
+@pytest.mark.parametrize("seed", range(20))
+@pytest.mark.parametrize("T", [40, 100, 1000])
+def test_true_gmv_variance_leq_w_hat_under_Sigma(seed, T):
+    Sigma, S, w_star, w_hat = gmv_setup(seed, T)
+    left = portfolio_variance(w_star, Sigma)
+    right = portfolio_variance(w_hat, Sigma)
+    assert left <= right * (1 + 1e-10)

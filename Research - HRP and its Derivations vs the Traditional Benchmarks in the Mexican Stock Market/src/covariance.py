@@ -1,4 +1,5 @@
 import numpy as np
+from src.portfolio_math import global_minimum_variance
 
 def sample_covariance(returns):
     #1. Number of assets
@@ -40,3 +41,32 @@ def simulate_returns(Sigma, T, rng, mu=None):
         R = R + mu
 
     return R
+
+def one_factor_covariance(N, seed, sigma_m=0.01,
+                          beta_range=(0.5, 1.5), idio_range=(0.01, 0.02)):
+    
+    """
+    Inputs the number of assets, a random seed, market volatility, and ranges for beta and idiosyncratic volatility.
+    Outputs a true multi-asset covariance matrix based on a single-factor model structure.
+    """
+    rng = np.random.default_rng(seed)
+
+    beta = rng.uniform(*beta_range, size=N)
+    idio_vol = rng.uniform(*idio_range, size=N)
+
+    Sigma = sigma_m**2 * np.outer(beta, beta) + np.diag(idio_vol**2)
+    
+    return Sigma
+
+def gmv_setup(seed, T, N=35):
+    """
+    Inputs a random seed, the number of time periods T, and the number of assets N.
+    Outputs a tuple containing the true covariance (Sigma), the sample covariance (S), 
+    and the Global Minimum Variance weights for both matrices.
+    """
+    Sigma = one_factor_covariance(N, seed=42)
+    rng = np.random.default_rng(seed)
+    R = simulate_returns(Sigma, T, rng)
+    S = sample_covariance(R)
+    return Sigma, S, global_minimum_variance(Sigma), global_minimum_variance(S)
+    
